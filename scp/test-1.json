@@ -2,25 +2,20 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "AllowS3ReadOnlyAccess",
-            "Effect": "Allow",
+            "Sid": "DenyIamChanges",
+            "Effect": "Deny",
             "Action": [
-                "s3:ListAllMyBuckets",
-                "s3:GetBucketLocation"
+                "iam:*"
             ],
-            "Resource": "arn:aws:s3:::*"
-        },
-        {
-            "Sid": "AllowS3ReadAccessToBucketContents",
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket",
-                "s3:GetObject"
-            ],
-            "Resource": [
-                "arn:aws:s3:::example-bucket",
-                "arn:aws:s3:::example-bucket/*"
-            ]
+            "Resource": "*",
+            "Condition": {
+                "StringNotLike": {
+                    "aws:PrincipalArn": [
+                        "arn:aws:iam::123456789012:role/Admin",
+                        "arn:aws:iam::234567890123:role/SecurityAdmin"
+                    ]
+                }
+            }
         }
     ]
 }
